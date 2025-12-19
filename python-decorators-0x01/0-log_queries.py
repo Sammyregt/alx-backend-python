@@ -3,14 +3,16 @@ import functools
 
 #### Decorator to log SQL queries
 
-def log_queries(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        # getting the SQL quary from kwargs or args
-        query = kwargs.get("query") if "query" in kwargs else args[0]
-        print(f"[LOG] Executing SQL Query: {query}")
-        return func(*args, **kwargs)
-    return wrapper
+def log_queries():
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # Get query from kwargs or first positional argument
+            query = kwargs.get("query") if "query" in kwargs else args[0]
+            print(f"[LOG] Executing SQL Query: {query}")
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
 
 @log_queries
 def fetch_all_users(query):
