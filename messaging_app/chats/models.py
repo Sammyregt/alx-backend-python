@@ -51,4 +51,5 @@ class Message(models.Model):
     sender_id = models.ForeignKey(User, related_nam="message", on_delete=models.CASCADE)
     message_body = models.TextField(null=False)
     sent_at = models.DateTimeField(auto_now_add=True)
-    
+    conversation = models.ForeignKey(conversation, related_name="messages", on_delete=models.CASCADE)
+
