@@ -37,7 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+
+     # Third-party Services
     'rest_framework',
+    'rest_framework_simplejwt',
+    'django_filters',
+
+    # Local Apps
+    'chats.apps.ChatsConfig'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTH_USER_MODEL = "chats.User"
 # rest framework configuration
 REST_FRAMEWORK = {
   'DEFAULT_PERMISSION_CLASSES': [

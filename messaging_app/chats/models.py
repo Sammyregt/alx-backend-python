@@ -10,7 +10,7 @@ class UserRole(models.TextChoices):
     HOST = 'host'
     ADMIN = 'admin'
 
-class USER(AbstractUser):
+class User(AbstractUser):
     """
     user_id (Primary Key, UUID, Indexed)
     first_name (VARCHAR, NOT NULL)
@@ -36,8 +36,8 @@ class Conversation(models.Model):
     participants_id (Foreign Key, references User(user_id))
     created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)
     """
-    conversation_id = models.UUIDField(primary_key=True, dafault=uuid.uuid4, editable=False)
-    participants_id = models.ManyToManyField(USER, related_name="conversations")
+    conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    participants_id = models.ManyToManyField(User, related_name="conversations")
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Message(models.Model):
@@ -48,8 +48,8 @@ class Message(models.Model):
     sent_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)
     """
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    sender_id = models.ForeignKey(User, related_nam="message", on_delete=models.CASCADE)
+    sender_id = models.ForeignKey(User, related_name="message", on_delete=models.CASCADE)
     message_body = models.TextField(null=False)
     sent_at = models.DateTimeField(auto_now_add=True)
-    conversation = models.ForeignKey(conversation, related_name="messages", on_delete=models.CASCADE)
+    conversation = models.ForeignKey(Conversation, related_name="messages", on_delete=models.CASCADE)
 
