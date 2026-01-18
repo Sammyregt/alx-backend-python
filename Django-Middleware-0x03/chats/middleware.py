@@ -83,7 +83,7 @@ class OffensiveLanguageMiddleware:
         return response    
        
 
-class RolePermissionMiddleware:
+class RolepermissionMiddleware:
     """
     Middleware to enforce role-based access control.
 
