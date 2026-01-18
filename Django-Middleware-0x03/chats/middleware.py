@@ -1,5 +1,8 @@
-from datetime import datetime
+from datetime import datetime, time
 import logging
+from django.http import JsonResponse
+from django.utils import timezone
+from rest_framework import status
 
 class RequestLoggingMiddleware:
     """
@@ -25,6 +28,37 @@ class RequestLoggingMiddleware:
         response = self.get_response(request)
 
         return response
+
+class RestrictAccessByTimeMiddleware:
+    """
+    This middleware restricts access to the application
+    outside the allowed time window (6:00pm to 9:00pm)
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        """
+        Runs for every incoming request
+        checks the current time and restricts access if outside allowed hours
+        """
+        
+        #Getting the current time
+        current_time = timezone.now().time()
+
+        if not (current_time > time(hour=18) and current_time < time(hour=21)):
+            return JsonResponse(
+                {
+                    "error": "Chat is restricted at this time"
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        
+        #if within allowed time, proceed to the next middleware or view
+        response = self.get_response(request)
+
+        return response
+    
 
 
         
