@@ -52,7 +52,7 @@ def create_database(connection):
     cursor.execute("CREATE DATABASE IF NOT EXISTS ALX_prodev")
     cursor.close()
 
-def connect_to_prodev():
+def connect_to_sprodev():
     """
     Connects to the ALX_prodev database
 
