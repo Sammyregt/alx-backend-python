@@ -1,0 +1,16 @@
+#! /bin/bash
+#
+# This script carries out a rolling update
+
+# Apply deployment
+kubectl apply -f blue-deployment.yaml
+
+# Monitor status of rollout
+kubectl rollout status deployments/web-blue
+
+# Test app
+NODE_PORT="$(kubectl get services/web -o go-template='{{(index .spec.ports 0).nodePort}}')"
+curl http://"$(minikube ip):$NODE_PORT"
+
+# Verify that rolling update is complete
+kubectl get pods

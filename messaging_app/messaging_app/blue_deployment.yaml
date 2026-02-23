@@ -1,0 +1,95 @@
+# DB deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-deployment
+  labels:
+    app: messaging-app-db
+spec:
+  selector:
+    matchLabels:
+      app: messaging-app-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: messaging-app-db
+    spec:
+      containers:
+      - image: mysql:8.0
+        name: mysql
+        env:
+            - name: MYSQL_DATABASE
+              value: messaging_app
+            - name: MYSQL_PASSWORD
+              value: mysql_password
+            - name: MYSQL_ROOT_PASSWORD
+              value: mysql_root_password
+            - name: MYSQL_USER
+              value: mysql_user
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+              cpu: 100m
+              memory: 128Mi
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-data
+        persistentVolumeClaim:
+          claimName: mysql-data
+
+---
+
+# Web Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-blue
+  labels:
+    app: messaging-app-web
+    version: blue
+spec:
+  selector:
+    matchLabels:
+      app: messaging-app-web
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: messaging-app-web
+        version: blue
+    spec:
+      containers:
+      - name: web
+        image: web:2.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        ports:
+        - containerPort: 8000
+
+---
+
+# Web Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: messaging-app-web
+  ports:
+  - port: 8000
+    targetPort: 8000

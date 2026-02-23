@@ -1,0 +1,10 @@
+#! /bin/bash
+#
+# This script applies the blue, green and 
+# kubeservice deployment
+
+kubectl apply -f blue_deployment.yaml
+kubectl apply -f green_deployment.yaml
+kubectl apply -f kubeservice.yaml
+
+kubectl logs

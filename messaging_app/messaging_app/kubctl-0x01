@@ -1,0 +1,23 @@
+#! /bin/bash
+#
+# This script scales a deployment and monitors
+# these deployments
+
+# Get exposed service url
+NODE_PORT="$(kubectl get services/kubernetes-bootcamp -o go-template='{{(index .spec.ports 0).nodePort}}')"
+URL=http://"$(minikube ip):$NODE_PORT"
+echo URL=$URL
+
+# Scale web to 3 replicas
+kubectl scale deployments/web --replicas=3
+
+# Verify existence additional pods
+kubectl get pods
+
+# Perform load testing on app
+wrk -t2 -c10 -d15 $URL
+wrk -t4 -c50 -d15 $URL
+wrk -t8 -c200 -d15 $URL
+
+# Monitor resource usage of pods
+kubectl top pods

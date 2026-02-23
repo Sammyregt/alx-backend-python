@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-green
+  labels:
+    app: messaging-app-web
+    version: green
+spec:
+  selector:
+    matchLabels:
+      app: messaging-app-web
+      version: green
+  template:
+    metadata:
+      labels:
+        app: messaging-app-web
+        version: green
+    spec:
+      containers:
+      - name: web
+        image: web:2.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        ports:
+        - containerPort: 8000
