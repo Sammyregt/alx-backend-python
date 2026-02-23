@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo "🚀 Starting Minikube cluster..."
+minikube start
+
+echo "verifying kubernetes cluster info..."
+kubectl cluster-info
+
+echo "Retrieving available pods in all namespaces..."
+kubectl get pods --all-namespaces
+
+echo "✅ kurbeScript completed successfully!"
